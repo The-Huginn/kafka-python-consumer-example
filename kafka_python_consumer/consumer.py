@@ -1,6 +1,7 @@
 from time import sleep
 from kafka import KafkaConsumer
 import mysql.connector
+import json
 import sys
 
 def main():
@@ -28,7 +29,7 @@ def main():
     # Listens to user input
     while True:
         try:
-            choice = input('Please select option:\n[1] To add new name or rename existing rover\n[2] To add new name or rename existing outpost\n[3] To add new name or rename existing checkpoint')
+            choice = input('Please select option:\n[1] To add new name or rename existing rover\n[2] To add new name or rename existing outpost\n[3] To add new name or rename existing checkpoint\n')
             if choice == '1':
                 naming_rover(None)
         except:
@@ -43,7 +44,8 @@ def main():
 def naming_rover(cur):
     consumer = KafkaConsumer('rover-metrics', bootstrap_servers='rover-cluster-kafka-bootstrap:9092')
     for msg in consumer:
-        print('UID: %s', msg.value)    
+        data = json.load(msg.value)
+        print('UID: %s', data['driverId'])    
     
 
 main()
