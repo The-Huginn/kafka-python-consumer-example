@@ -45,8 +45,8 @@ def naming_rover(cur):
     consumer = KafkaConsumer('rover-metrics', bootstrap_servers='rover-cluster-kafka-bootstrap:9092')
     for msg in consumer:
         decoded = msg.value.decode('utf-8')
-        data = json.dumps(decoded)
-        print('UID: %s', data['driverId'])    
+        data = json.loads(decoded)
+        print(data['driverId'])    
     
 
 naming_rover(None)
