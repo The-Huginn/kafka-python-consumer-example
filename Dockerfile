@@ -9,4 +9,4 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-CMD [ "python3", "-m" , "kafka_python_consumer.consumer"]
+# CMD [ "python3", "-m" , "kafka_python_consumer.consumer"]
