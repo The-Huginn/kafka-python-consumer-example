@@ -48,4 +48,4 @@ def naming_rover(cur):
         print('UID: %s', data['driverId'])    
     
 
-naming_rover()
+naming_rover(None)
