@@ -30,10 +30,10 @@ def main():
         try:
             choice = input('Please select option:\n[1] To add new name or rename existing rover\n[2] To add new name or rename existing outpost\n[3] To add new name or rename existing checkpoint')
             if choice == '1':
-                naming_rover(cur)
+                naming_rover(None)
         except:
-            cur.commit()
-            cur.close()
+            # cur.commit()
+            # cur.close()
             sys.exit(0)
 
 
