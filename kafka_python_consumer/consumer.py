@@ -1,26 +1,49 @@
 from time import sleep
 from kafka import KafkaConsumer
 import mysql.connector
+import sys
 
-consumer = KafkaConsumer('rover-metrics', bootstrap_servers='rover-cluster-kafka-bootstrap:9092')
+def main():
 
-# for msg in consumer:
-#     print (msg)
-#     sleep(1)
+    # con = mysql.connector.connect(user='team4', password='team4pswd', host='team4DB', database='names')
+    # print("Database opened successfully")
 
-con = mysql.connector.connect(user='team4', password='team4pswd', host='team4DB', database='names')
-print("Database opened successfully")
+    # cur = con.cursor()
 
-# cur = con.cursor()
-# cur.execute('''CREATE TABLE STUDENT
-#       (ADMISSION INT PRIMARY KEY     NOT NULL,
-#       NAME           TEXT    NOT NULL,
-#       AGE            INT     NOT NULL,
-#       COURSE        CHAR(50),
-#       DEPARTMENT        CHAR(50));''')
-# print("Table created successfully")
+    # # Creates tables
+    # cur.execute('''CREATE TABLE ROVER_NAMES
+    #     (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
+    #     UID VARCHAR(50) UNIQUE NOT NULL);''')
 
-# cur.execute("INSERT INTO STUDENT (ADMISSION,NAME,AGE,COURSE,DEPARTMENT) VALUES (3420, 'John', 18, 'Computer Science', 'ICT')");
+    # cur.execute('''CREATE TABLE OUTPOST_NAMES
+    #     (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
+    #     UID VARCHAR(50) UNIQUE NOT NULL);''')
 
-# con.commit()
-con.close()
+    # cur.execute('''CREATE TABLE CHECKPOINT_NAMES
+    #     (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
+    #     UID VARCHAR(50) UNIQUE NOT NULL);''')
+
+    # print("Tables created successfully")
+
+    # Listens to user input
+    while True:
+        try:
+            choice = input('Please select option:\n[1] To add new name or rename existing rover\n[2] To add new name or rename existing outpost\n[3] To add new name or rename existing checkpoint')
+            if choice == '1':
+                naming_rover(cur)
+        except:
+            cur.commit()
+            cur.close()
+            sys.exit(0)
+
+
+    cur.execute("INSERT INTO STUDENT (ADMISSION,NAME,AGE,COURSE,DEPARTMENT) VALUES (3420, 'John', 18, 'Computer Science', 'ICT')");
+
+
+def naming_rover(cur):
+    consumer = KafkaConsumer('rover-metrics', bootstrap_servers='rover-cluster-kafka-bootstrap:9092')
+    for msg in consumer:
+        print('UID: %s', msg.value)    
+    
+
+main()
