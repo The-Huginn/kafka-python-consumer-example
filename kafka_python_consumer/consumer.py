@@ -5,7 +5,7 @@ import json
 import sys
 
 def create_table(cur, name):
-    cur.execute("SHOW TABLES LIKE '%s';", name)
+    cur.execute("SHOW TABLES LIKE %s;", name)
     if not cur.fetchone():
         cur.execute('''CREATE TABLE %s
             (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
