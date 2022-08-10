@@ -4,6 +4,13 @@ import mysql.connector
 import json
 import sys
 
+def create_table(cur, name):
+    cur.execute("SHOW TABLES LIKE '%s';", name)
+    if not cur.fetchone():
+        cur.execute('''CREATE TABLE %s
+            (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
+            UID VARCHAR(50) UNIQUE NOT NULL);''', name)
+
 def main():
 
     con = mysql.connector.connect(user='team4', password='team4pswd', host='mysql', database='names')
@@ -11,19 +18,10 @@ def main():
 
     cur = con.cursor()
 
-    # Creates tables
-    cur.execute('''CREATE TABLE ROVER_NAMES
-        (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
-        UID VARCHAR(50) UNIQUE NOT NULL);''')
-
-    cur.execute('''CREATE TABLE OUTPOST_NAMES
-        (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
-        UID VARCHAR(50) UNIQUE NOT NULL);''')
-
-    cur.execute('''CREATE TABLE CHECKPOINT_NAMES
-        (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
-        UID VARCHAR(50) UNIQUE NOT NULL);''')
-
+    create_table(cur, 'ROVER_NAMES')
+    create_table(cur, 'OUTPOST_NAMES')
+    create_table(cur, 'CHECKPOINT_NAMES')
+    
     print("Tables created successfully")
 
     # Listens to user input
@@ -53,7 +51,7 @@ def naming_rover(cur):
         # Find existing name
         cur.execute('''SELECT *
             FROM ROVER_NAMES
-            WHERE UID=%s
+            WHERE UID=%s;
             ''', name_dict[index])
         current_name = cur.fetchone()
         if current_name:
@@ -75,7 +73,7 @@ def naming_rover(cur):
     # Check for existing entry of name
     cur.execute('''SELECT *
             FROM ROVER_NAMES
-            WHERE NAME=%s
+            WHERE NAME=%s;
             ''', new_name)
 
     # Non-empty response
@@ -88,7 +86,7 @@ def naming_rover(cur):
             (NAME, UID)
             VALUES(%s, %s)
             ON DUPLICATE KEY UPDATE
-            UID=%s
+            UID=%s;
             ''', new_name, name_dict[index], name_dict[index])
 
     return
