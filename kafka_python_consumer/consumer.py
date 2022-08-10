@@ -6,25 +6,25 @@ import sys
 
 def main():
 
-    # con = mysql.connector.connect(user='team4', password='team4pswd', host='team4DB', database='names')
-    # print("Database opened successfully")
+    con = mysql.connector.connect(user='team4', password='team4pswd', host='team4DB', database='names')
+    print("Database opened successfully")
 
-    # cur = con.cursor()
+    cur = con.cursor()
 
-    # # Creates tables
-    # cur.execute('''CREATE TABLE ROVER_NAMES
-    #     (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
-    #     UID VARCHAR(50) UNIQUE NOT NULL);''')
+    # Creates tables
+    cur.execute('''CREATE TABLE ROVER_NAMES
+        (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
+        UID VARCHAR(50) UNIQUE NOT NULL);''')
 
-    # cur.execute('''CREATE TABLE OUTPOST_NAMES
-    #     (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
-    #     UID VARCHAR(50) UNIQUE NOT NULL);''')
+    cur.execute('''CREATE TABLE OUTPOST_NAMES
+        (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
+        UID VARCHAR(50) UNIQUE NOT NULL);''')
 
-    # cur.execute('''CREATE TABLE CHECKPOINT_NAMES
-    #     (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
-    #     UID VARCHAR(50) UNIQUE NOT NULL);''')
+    cur.execute('''CREATE TABLE CHECKPOINT_NAMES
+        (NAME VARCHAR(50) PRIMARY KEY NOT NULL,
+        UID VARCHAR(50) UNIQUE NOT NULL);''')
 
-    # print("Tables created successfully")
+    print("Tables created successfully")
 
     # Listens to user input
     while True:
@@ -33,10 +33,10 @@ def main():
             if choice == '1':
                 naming_rover(None)
 
-            # cur.commit()
+            cur.commit()
         except:
-            # cur.commit()
-            # cur.close()
+            cur.commit()
+            cur.close()
             sys.exit(0)
 
 def naming_rover(cur):
@@ -94,4 +94,4 @@ def naming_rover(cur):
     return
     
 
-naming_rover(None)
+main()
