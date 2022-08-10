@@ -31,10 +31,10 @@ def main():
             if choice == '1':
                 naming_rover(cur)
 
-            cur.commit()
+            con.commit()
         except:
-            cur.commit()
             cur.close()
+            con.commit()
             sys.exit(0)
 
 def naming_rover(cur):
