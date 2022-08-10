@@ -44,24 +44,24 @@ def naming_rover(cur):
     consumer = KafkaConsumer('rover-metrics', bootstrap_servers='rover-cluster-kafka-bootstrap:9092')
     index = 0
 
-    name_map = {}
+    name_dict = {}
     for msg in consumer:
         decoded = msg.value.decode('utf-8')
         data = json.loads(decoded)
-        name_map[index] = data['driverId']
+        name_dict[index] = data['driverId']
 
         # Find existing name
         cur.execute('''SELECT *
             FROM ROVER_NAMES
             WHERE UID=%s
-            ''', name_map[index])
+            ''', name_dict[index])
         current_name = cur.fetchone()
         if current_name:
             current_name = ' - ' + current_name[0]
         else:
             current_name = ''
 
-        print(str(index) + ' : ' +name_map[index] + current_name)
+        print(str(index) + ' : ' +name_dict[index] + current_name)
         index+=1
     
     option = input('Select')
@@ -70,7 +70,7 @@ def naming_rover(cur):
         print('Invalid index')
         return
 
-    new_name = input('Insert new name for rover ID: ' + name_map[index])
+    new_name = input('Insert new name for rover ID: ' + name_dict[index])
 
     # Check for existing entry of name
     cur.execute('''SELECT *
@@ -89,7 +89,7 @@ def naming_rover(cur):
             VALUES(%s, %s)
             ON DUPLICATE KEY UPDATE
             UID=%s
-            ''', new_name, name_map[index], name_map[index])
+            ''', new_name, name_dict[index], name_dict[index])
 
     return
     
