@@ -32,21 +32,65 @@ def main():
             choice = input('Please select option:\n[1] To add new name or rename existing rover\n[2] To add new name or rename existing outpost\n[3] To add new name or rename existing checkpoint\n')
             if choice == '1':
                 naming_rover(None)
+
+            # cur.commit()
         except:
             # cur.commit()
             # cur.close()
             sys.exit(0)
 
-
-    cur.execute("INSERT INTO STUDENT (ADMISSION,NAME,AGE,COURSE,DEPARTMENT) VALUES (3420, 'John', 18, 'Computer Science', 'ICT')");
-
-
 def naming_rover(cur):
+    # Fetch all rovers
     consumer = KafkaConsumer('rover-metrics', bootstrap_servers='rover-cluster-kafka-bootstrap:9092')
+    index = 0
+
     for msg in consumer:
         decoded = msg.value.decode('utf-8')
         data = json.loads(decoded)
-        print(data['driverId'])    
+        map[index] = data['driverId']
+
+        # Find existing name
+        cur.execute('''SELECT *
+            FROM ROVER_NAMES
+            WHERE UID=%s
+            ''', map[index])
+        current_name = cur.fetchone()
+        if current_name:
+            current_name = ' - ' + current_name[0]
+        else:
+            current_name = ''
+
+        print(str(index) + ' : ' +map[index] + current_name)
+        index+=1
+    
+    option = input('Select')
+    
+    if not option.strip().isdigit() or option not in range(0, index):
+        print('Invalid index')
+        return
+
+    new_name = input('Insert new name for rover ID: ' + map[index])
+
+    # Check for existing entry of name
+    cur.execute('''SELECT *
+            FROM ROVER_NAMES
+            WHERE NAME=%s
+            ''', new_name)
+
+    # Non-empty response
+    if cur.fetchall():
+        print('This name is already in use')
+        return
+
+    # Inserts new name or updates the old one
+    cur.execute('''INSERT INTO ROVER_NAMES
+            (NAME, UID)
+            VALUES(%s, %s)
+            ON DUPLICATE KEY UPDATE
+            UID=%s
+            ''', new_name, map[index], map[index])
+
+    return
     
 
 naming_rover(None)
