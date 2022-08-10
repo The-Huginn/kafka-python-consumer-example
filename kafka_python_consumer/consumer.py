@@ -44,7 +44,7 @@ def naming_rover(cur):
     consumer = KafkaConsumer('rover-metrics', bootstrap_servers='rover-cluster-kafka-bootstrap:9092')
     index = 0
 
-    name_map = ['' for x in range(len(consumer))]
+    name_map = {}
     for msg in consumer:
         decoded = msg.value.decode('utf-8')
         data = json.loads(decoded)
