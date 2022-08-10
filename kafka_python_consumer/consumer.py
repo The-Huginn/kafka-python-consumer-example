@@ -6,7 +6,7 @@ import sys
 
 def main():
 
-    con = mysql.connector.connect(user='team4', password='team4pswd', host='team4DB', database='names')
+    con = mysql.connector.connect(user='team4', password='team4pswd', host='mysql', database='names')
     print("Database opened successfully")
 
     cur = con.cursor()
@@ -31,7 +31,7 @@ def main():
         try:
             choice = input('Please select option:\n[1] To add new name or rename existing rover\n[2] To add new name or rename existing outpost\n[3] To add new name or rename existing checkpoint\n')
             if choice == '1':
-                naming_rover(None)
+                naming_rover(cur)
 
             cur.commit()
         except:
